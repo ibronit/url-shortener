@@ -11,9 +11,9 @@ exports.store = function (url, shorthand = null) {
         return urls;
     }
 
-    shorthand = { shorthand: UrlShortener.generateUrl() };
-    storage.push({ original_url: url, ...shorthand });
-    return shorthand;
+    const shortUrl = UrlShortener.generateUrl();
+    storage.push({ original_url: url, shorthand: getSlugOfUrl(shortUrl) });
+    return { shorthand: shortUrl };
 }
 
 function getByShorthand(shorthand) {
@@ -27,6 +27,10 @@ function validateShorthand(shorthand) {
         const err = new ShorthandIsNotUnique(`Shorthand: "${shorthand}" already exists`);
         throw err;
     }
+}
+
+function getSlugOfUrl(url) {
+    return url.split('/').pop();
 }
 
 exports.getByShorthand = getByShorthand;
