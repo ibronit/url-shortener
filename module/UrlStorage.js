@@ -1,4 +1,4 @@
-const UrlShortener = require('./UrlShortener');
+const shortid = require('shortid');
 const ShorthandIsNotUnique = require('../exception/ShorthandIsNotUnique');
 
 let storage = [];
@@ -11,9 +11,9 @@ exports.store = function (url, shorthand = null) {
         return urls;
     }
 
-    const shortUrl = UrlShortener.generateUrl();
-    storage.push({ original_url: url, shorthand: getSlugOfUrl(shortUrl) });
-    return { shorthand: shortUrl };
+    shorthand = { shorthand: shortid.generate() };
+    storage.push({ original_url: url, ...shorthand });
+    return shorthand;
 }
 
 function getByShorthand(shorthand) {
@@ -27,10 +27,6 @@ function validateShorthand(shorthand) {
         const err = new ShorthandIsNotUnique(`Shorthand: "${shorthand}" already exists`);
         throw err;
     }
-}
-
-function getSlugOfUrl(url) {
-    return url.split('/').pop();
 }
 
 exports.getByShorthand = getByShorthand;
