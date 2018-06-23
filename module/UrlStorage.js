@@ -6,12 +6,14 @@ let storage = [];
 exports.store = function (url, shorthand = null) {    
     if (shorthand) {
         validateShorthand(shorthand);
-        storage.push({ original_url: url, shorthand: shorthand });
-        return;
+        const urls = { original_url: url, shorthand: shorthand };
+        storage.push(urls);
+        return urls;
     }
 
-    shorthand = UrlShortener.generateUrl();
-    storage.push({ original_url: url, shorthand: shorthand });
+    shorthand = {shorthand: UrlShortener.generateUrl()};
+    storage.push({ original_url: url, ...shorthand });
+    return shorthand;
 }
 
 function getByShorthand (shorthand) {
@@ -22,7 +24,7 @@ function getByShorthand (shorthand) {
 
 function validateShorthand (shorthand) {
     if (getByShorthand(shorthand)) {
-        const err = new ShorthandIsNotUnique(`Shorthand: ${shorthand} already exists`);
+        const err = new ShorthandIsNotUnique(`Shorthand: "${shorthand}" already exists`);
         throw err;
     }    
 }

@@ -8,20 +8,19 @@ app.use(bodyParser.json());
 
 app.post('/api/create', (req, res) => {
     if (req.body.original_url == null) {
-        res.sendStatus(400);
+        res.status(400).json({'error': 'original_url is missing from the request body'});
     }
 
     try {
         const shorthand = req.body.shorthand || null;
-        UrlStorage.store(req.body.original_url, shorthand);
+        const storedUrls = UrlStorage.store(req.body.original_url, shorthand);
+        res.status(201).json(storedUrls);
     } catch (e) {        
-        if (e instanceof ShorthandIsNotUnique) {
-            res.sendStatus(409);
+        if (e instanceof ShorthandIsNotUnique) {            
+            res.status(409).json({'error': e.message});
         }
         throw e;
     }    
-
-    res.json(UrlStorage.storage);
 });
 
 app.listen(3000, () => console.log('App listening on port 3000!'))
