@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const UrlStorage = require('./module/UrlStorage');
 const ShorthandIsNotUnique = require('./exception/ShorthandIsNotUnique');
+const Config = require('dotenv-extended').load();
 const app = express();
 
 app.use(bodyParser.json());
@@ -23,8 +24,8 @@ app.post('/api/create', (req, res) => {
     }
 });
 
-app.get('/:shorthand', (req, res) => {
-
+app.get('/:shorthand', (req, res) => {    
+    res.json(UrlStorage.getByShorthand(req.body.shorthand));
 });
 
-app.listen(3000, () => console.log('App listening on port 3000!'))
+app.listen(Config.PORT, () => console.log(`App listening on port ${Config.PORT}!`))

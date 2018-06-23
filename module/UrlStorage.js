@@ -29,4 +29,4 @@ function validateShorthand(shorthand) {
     }
 }
 
-exports.storage = storage;
+exports.getByShorthand = getByShorthand;

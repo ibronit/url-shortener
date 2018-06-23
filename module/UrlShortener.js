@@ -1,7 +1,6 @@
 const shortid = require('shortid');
+const Config = require('dotenv-extended').load();
 
-const domain = 'https://short-url/';
-
-exports.generateUrl = function () {        
-    return domain + shortid.generate();    
+exports.generateUrl = function () {
+    return `${Config.DOMAIN}:${Config.PORT}/` + shortid.generate();
 }
