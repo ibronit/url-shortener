@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const UrlStorage = require('./module/UrlStorage');
 const ShorthandIsNotUnique = require('./exception/ShorthandIsNotUnique');
 const Config = require('dotenv-extended').load();
+const JWTverifier = require('./module/JWTverifier');
+
 const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/api/create', (req, res) => {
+app.post('/api/create', JWTverifier.verifyToken, (req, res) => {
     if (req.body.original_url == null) {
         return res.status(400).json({ 'error': 'original_url is missing from the request body' });
     }
